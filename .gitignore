@@ -2,3 +2,4 @@ myenv/
 __pycache__/
 train/
 test/
+flower_images/
