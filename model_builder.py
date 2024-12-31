@@ -3,10 +3,11 @@ Library for model classes
 """
 import torch
 import torchvision
+from torchvision import datasets, transforms
 
 from torch import nn
 
-def create_effnet_b3_model(num_classes: int,
+def create_effnet_b3_model(train_dir: str,
                            seed: int = 42):
 
     # Get pretrained efficientnet model
@@ -18,11 +19,16 @@ def create_effnet_b3_model(num_classes: int,
     for param in model.parameters():
         param.requires_grad = False
     
+    # Get the number of classes for classifier head
+    train_data = datasets.ImageFolder(train_dir)
+    class_names = train_data.classes
+    output_shape = len(class_names)
+
     # Recreate classifier head
     model.classifier = torch.nn.Sequential(
         torch.nn.Dropout(p=0.2, inplace=True),
         torch.nn.Linear(in_features=1536, # Check torch summary for this value
-                        out_features=num_classes, # same number of output units as our number of classes
+                        out_features=output_shape, # same number of output units as our number of classes
                         bias=True))
     
     return model, transform
