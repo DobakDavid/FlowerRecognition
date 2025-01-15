@@ -13,14 +13,14 @@ def run_script():
     try:
         # Replace 'python your_script.py' with the command to run your script
         subprocess.run(["python", "main.py"], check=True)
-        # main.main()
         print("Script executed successfully!")
     except Exception as e:
         print(f"An error occurred: {e}")
 
 def script_thread():
     t1 = threading.Thread(target = run_script)
-    t1.start
+    t1.daemon = True  # Allow the thread to close when the program exits
+    t1.start()
 
 class App(customtkinter.CTk):
     def __init__(self):
@@ -39,13 +39,14 @@ class App(customtkinter.CTk):
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
 
-        self.sidebar_button_1 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_1_event, text = "Run script")
+        self.sidebar_button_1 = customtkinter.CTkButton(self, command=self.sidebar_button_1_event, text = "Run script")
         self.sidebar_button_1.grid(row=1, column=0, padx=20, pady=10)
 
     def sidebar_button_1_event(self):
         print("my button")
-        script_thread()
+        #script_thread()
 
+    
 if __name__ == "__main__":
     app = App()
     app.mainloop()
